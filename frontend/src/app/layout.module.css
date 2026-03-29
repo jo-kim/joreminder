@@ -1,0 +1,145 @@
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.sidebarSection {
+  padding: 0 12px;
+}
+
+.sidebarTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 16px 8px 6px;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background-color 0.15s;
+}
+
+.listItem:hover {
+  background: var(--bg-hover);
+}
+
+.listItemSelected {
+  background: var(--bg-selected);
+}
+
+.listBullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.listName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listCount {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.mainHeader {
+  padding: 24px 24px 8px;
+}
+
+.mainTitle {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.reminderList {
+  flex: 1;
+  padding: 0 24px;
+}
+
+.reminderRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-secondary);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.checkbox:hover {
+  border-color: var(--color-blue);
+}
+
+.checkboxCompleted {
+  border-color: transparent;
+}
+
+.checkmark {
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.reminderTitle {
+  font-size: 15px;
+  line-height: 22px;
+  flex: 1;
+}
+
+.reminderTitleCompleted {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 17px;
+}
