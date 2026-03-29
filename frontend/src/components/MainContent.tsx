@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Reminder, ReminderList } from "@/lib/types";
+import { Reminder, ReminderList, Priority } from "@/lib/types";
 import { getColor } from "@/lib/colors";
 import ReminderRow from "./ReminderRow";
 import ConfirmDialog from "./ConfirmDialog";
@@ -12,7 +12,16 @@ interface MainContentProps {
   reminders: Reminder[];
   onToggle: (id: number) => void;
   onCreate: (title: string) => void;
-  onUpdate: (id: number, title: string) => void;
+  onUpdate: (
+    id: number,
+    fields: {
+      title: string;
+      memo?: string | null;
+      dueDate?: string | null;
+      dueTime?: string | null;
+      priority?: Priority | null;
+    }
+  ) => void;
   onDelete: (id: number) => void;
 }
 

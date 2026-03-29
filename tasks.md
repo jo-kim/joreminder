@@ -91,21 +91,21 @@
 ## Phase 5: Reminder 상세 필드 추가
 
 ### 5-1. Backend 필드 추가
-- [ ] Reminder 엔티티에 memo, dueDate, dueTime 필드 추가
-- [ ] Priority enum 생성 (NONE, LOW, MEDIUM, HIGH)
-- [ ] completedAt 필드 추가 (토글 시 자동 설정)
-- [ ] displayOrder 필드 추가
-- [ ] DTO 및 Service/Controller 수정
+- [x] Reminder 엔티티에 memo, dueDate, dueTime 필드 추가
+- [x] Priority enum 생성 (NONE, LOW, MEDIUM, HIGH)
+- [x] completedAt 필드 추가 (토글 시 자동 설정)
+- [x] displayOrder 필드 추가
+- [x] DTO 및 Service/Controller 수정
 
 ### 5-2. 인라인 편집 확장
-- [ ] 리마인더 확장 영역에 메모 입력 필드 추가
-- [ ] 마감일 date picker 추가
-- [ ] 마감시간 time picker 추가
-- [ ] 우선순위 선택 UI (느낌표 아이콘: ! / !! / !!!)
+- [x] 리마인더 확장 영역에 메모 입력 필드 추가
+- [x] 마감일 date picker 추가
+- [x] 마감시간 time picker 추가
+- [x] 우선순위 선택 UI (느낌표 아이콘: ! / !! / !!!)
 
 ### 5-3. 서브텍스트 표시
-- [ ] 리마인더 행에 마감일 미리보기 (작은 회색 글씨)
-- [ ] 리마인더 행에 메모 미리보기 (한 줄, 말줄임)
+- [x] 리마인더 행에 마감일 미리보기 (작은 회색 글씨)
+- [x] 리마인더 행에 메모 미리보기 (한 줄, 말줄임)
 
 ---
 

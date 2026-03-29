@@ -37,6 +37,11 @@ public class DefaultReminderService implements ReminderService {
         var list = reminderListRepository.findById(request.listId())
                 .orElseThrow(() -> new NoSuchElementException("목록을 찾을 수 없습니다. id=" + request.listId()));
         var reminder = new Reminder(request.title(), list);
+        if (request.memo() != null || request.dueDate() != null
+                || request.dueTime() != null || request.priority() != null) {
+            reminder.update(request.title(), request.memo(),
+                    request.dueDate(), request.dueTime(), request.priority());
+        }
         reminderRepository.save(reminder);
         return ReminderResponse.from(reminder);
     }
@@ -45,7 +50,8 @@ public class DefaultReminderService implements ReminderService {
     @Transactional
     public ReminderResponse update(Long id, ReminderRequest request) {
         var reminder = getById(id);
-        reminder.update(request.title());
+        reminder.update(request.title(), request.memo(),
+                request.dueDate(), request.dueTime(), request.priority());
         return ReminderResponse.from(reminder);
     }
 

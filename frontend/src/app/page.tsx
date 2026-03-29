@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { ReminderList, Reminder } from "@/lib/types";
+import { ReminderList, Reminder, Priority } from "@/lib/types";
 import {
   fetchLists,
   fetchReminders,
@@ -70,9 +70,18 @@ export default function Home() {
     await refresh();
   };
 
-  const handleUpdate = async (id: number, title: string) => {
+  const handleUpdate = async (
+    id: number,
+    fields: {
+      title: string;
+      memo?: string | null;
+      dueDate?: string | null;
+      dueTime?: string | null;
+      priority?: Priority | null;
+    }
+  ) => {
     if (selectedId === null) return;
-    await updateReminder(id, { title, listId: selectedId });
+    await updateReminder(id, { ...fields, listId: selectedId });
     await refresh();
   };
 

@@ -14,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import jo.ai.joreminder.domain.Priority;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,7 +75,7 @@ class DefaultReminderServiceTest {
         @Test
         @DisplayName("리마인더를 생성한다")
         void createsReminder() {
-            var request = new ReminderRequest("Buy milk", savedList.getId());
+            var request = new ReminderRequest("Buy milk", savedList.getId(), null, null, null, null);
 
             var result = service.create(request);
 
@@ -82,9 +86,25 @@ class DefaultReminderServiceTest {
         }
 
         @Test
+        @DisplayName("상세 필드와 함께 리마인더를 생성한다")
+        void createsWithDetailFields() {
+            var dueDate = LocalDate.of(2026, 4, 1);
+            var dueTime = LocalTime.of(9, 0);
+            var request = new ReminderRequest("Task", savedList.getId(),
+                    "메모", dueDate, dueTime, Priority.HIGH);
+
+            var result = service.create(request);
+
+            assertThat(result.memo()).isEqualTo("메모");
+            assertThat(result.dueDate()).isEqualTo(dueDate);
+            assertThat(result.dueTime()).isEqualTo(dueTime);
+            assertThat(result.priority()).isEqualTo(Priority.HIGH);
+        }
+
+        @Test
         @DisplayName("존재하지 않는 목록에 생성 시 예외를 던진다")
         void throwsWhenListNotFound() {
-            var request = new ReminderRequest("Task", 999L);
+            var request = new ReminderRequest("Task", 999L, null, null, null, null);
 
             assertThatThrownBy(() -> service.create(request))
                     .isInstanceOf(NoSuchElementException.class);
@@ -99,7 +119,7 @@ class DefaultReminderServiceTest {
         @DisplayName("리마인더 제목을 수정한다")
         void updatesTitle() {
             var saved = reminderRepository.save(new Reminder("Old", savedList));
-            var request = new ReminderRequest("New", savedList.getId());
+            var request = new ReminderRequest("New", savedList.getId(), null, null, null, null);
 
             var result = service.update(saved.getId(), request);
 
@@ -107,9 +127,24 @@ class DefaultReminderServiceTest {
         }
 
         @Test
+        @DisplayName("상세 필드를 수정한다")
+        void updatesDetailFields() {
+            var saved = reminderRepository.save(new Reminder("Task", savedList));
+            var request = new ReminderRequest("Task", savedList.getId(),
+                    "새 메모", LocalDate.of(2026, 5, 1), LocalTime.of(14, 0), Priority.MEDIUM);
+
+            var result = service.update(saved.getId(), request);
+
+            assertThat(result.memo()).isEqualTo("새 메모");
+            assertThat(result.dueDate()).isEqualTo(LocalDate.of(2026, 5, 1));
+            assertThat(result.dueTime()).isEqualTo(LocalTime.of(14, 0));
+            assertThat(result.priority()).isEqualTo(Priority.MEDIUM);
+        }
+
+        @Test
         @DisplayName("존재하지 않는 리마인더 수정 시 예외를 던진다")
         void throwsWhenNotFound() {
-            var request = new ReminderRequest("New", savedList.getId());
+            var request = new ReminderRequest("New", savedList.getId(), null, null, null, null);
 
             assertThatThrownBy(() -> service.update(999L, request))
                     .isInstanceOf(NoSuchElementException.class);
@@ -128,6 +163,7 @@ class DefaultReminderServiceTest {
             var result = service.toggle(saved.getId());
 
             assertThat(result.completed()).isTrue();
+            assertThat(result.completedAt()).isNotNull();
         }
 
         @Test

@@ -154,6 +154,114 @@
   padding: 0;
 }
 
+/* Expanded edit area */
+.reminderExpanded {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.memoInput {
+  font-size: 13px;
+  line-height: 1.4;
+  border: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  padding: 0;
+  resize: none;
+}
+
+.memoInput::placeholder {
+  color: var(--text-secondary);
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detailLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 60px;
+}
+
+.detailInput {
+  font-size: 13px;
+  font-family: inherit;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.detailInput:focus {
+  border-color: var(--color-blue);
+}
+
+.priorityGroup {
+  display: flex;
+  gap: 4px;
+}
+
+.priorityButton {
+  padding: 3px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.priorityButton:hover {
+  background: var(--bg-hover);
+}
+
+.priorityButtonActive {
+  background: var(--color-blue);
+  color: white;
+  border-color: var(--color-blue);
+}
+
+.priorityButtonActive:hover {
+  background: var(--color-blue);
+}
+
+/* Subtext preview */
+.reminderSubtext {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 2px;
+}
+
+.dueDatePreview {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.memoPreview {
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.priorityIndicator {
+  font-weight: 700;
+  font-size: 14px;
+}
+
 .deleteButton {
   background: none;
   border: none;

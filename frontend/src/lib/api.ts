@@ -1,4 +1,4 @@
-import { ReminderList, Reminder } from "./types";
+import { ReminderList, Reminder, Priority } from "./types";
 
 const BASE = "/api";
 
@@ -36,13 +36,22 @@ export const deleteList = (id: number) =>
 export const fetchReminders = (listId: number) =>
   request<Reminder[]>(`/lists/${listId}/reminders`);
 
-export const createReminder = (body: { title: string; listId: number }) =>
+export interface ReminderBody {
+  title: string;
+  listId: number;
+  memo?: string | null;
+  dueDate?: string | null;
+  dueTime?: string | null;
+  priority?: Priority | null;
+}
+
+export const createReminder = (body: ReminderBody) =>
   request<Reminder>("/reminders", {
     method: "POST",
     body: JSON.stringify(body),
   });
 
-export const updateReminder = (id: number, body: { title: string; listId: number }) =>
+export const updateReminder = (id: number, body: ReminderBody) =>
   request<Reminder>(`/reminders/${id}`, {
     method: "PUT",
     body: JSON.stringify(body),

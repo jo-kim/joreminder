@@ -78,7 +78,7 @@ class ReminderControllerTest {
         @Test
         @DisplayName("201 — 리마인더를 생성한다")
         void createsReminder() throws Exception {
-            var request = new ReminderRequest("Buy milk", savedList.getId());
+            var request = new ReminderRequest("Buy milk", savedList.getId(), null, null, null, null);
 
             mockMvc.perform(post("/api/reminders")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -93,7 +93,7 @@ class ReminderControllerTest {
         @Test
         @DisplayName("404 — 존재하지 않는 목록에 생성 시")
         void returnsNotFound() throws Exception {
-            var request = new ReminderRequest("Task", 999L);
+            var request = new ReminderRequest("Task", 999L, null, null, null, null);
 
             mockMvc.perform(post("/api/reminders")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -110,7 +110,7 @@ class ReminderControllerTest {
         @DisplayName("200 — 리마인더를 수정한다")
         void updatesReminder() throws Exception {
             var saved = reminderRepository.save(new Reminder("Old", savedList));
-            var request = new ReminderRequest("New", savedList.getId());
+            var request = new ReminderRequest("New", savedList.getId(), null, null, null, null);
 
             mockMvc.perform(put("/api/reminders/{id}", saved.getId())
                             .contentType(MediaType.APPLICATION_JSON)
@@ -122,7 +122,7 @@ class ReminderControllerTest {
         @Test
         @DisplayName("404 — 존재하지 않는 리마인더")
         void returnsNotFound() throws Exception {
-            var request = new ReminderRequest("New", savedList.getId());
+            var request = new ReminderRequest("New", savedList.getId(), null, null, null, null);
 
             mockMvc.perform(put("/api/reminders/{id}", 999)
                             .contentType(MediaType.APPLICATION_JSON)

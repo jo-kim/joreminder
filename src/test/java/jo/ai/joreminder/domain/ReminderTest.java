@@ -4,6 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReminderTest {
@@ -25,6 +28,12 @@ class ReminderTest {
             assertThat(reminder.getTitle()).isEqualTo("Buy milk");
             assertThat(reminder.isCompleted()).isFalse();
             assertThat(reminder.getList()).isSameAs(list);
+            assertThat(reminder.getMemo()).isNull();
+            assertThat(reminder.getDueDate()).isNull();
+            assertThat(reminder.getDueTime()).isNull();
+            assertThat(reminder.getPriority()).isEqualTo(Priority.NONE);
+            assertThat(reminder.getDisplayOrder()).isZero();
+            assertThat(reminder.getCompletedAt()).isNull();
         }
 
         @Test
@@ -44,13 +53,30 @@ class ReminderTest {
     class Update {
 
         @Test
-        @DisplayName("제목을 변경한다")
-        void updateTitle() {
+        @DisplayName("모든 필드를 변경한다")
+        void updateAllFields() {
             var reminder = new Reminder("Old", sampleList());
+            var dueDate = LocalDate.of(2026, 4, 1);
+            var dueTime = LocalTime.of(9, 30);
 
-            reminder.update("New");
+            reminder.update("New", "메모입니다", dueDate, dueTime, Priority.HIGH);
 
             assertThat(reminder.getTitle()).isEqualTo("New");
+            assertThat(reminder.getMemo()).isEqualTo("메모입니다");
+            assertThat(reminder.getDueDate()).isEqualTo(dueDate);
+            assertThat(reminder.getDueTime()).isEqualTo(dueTime);
+            assertThat(reminder.getPriority()).isEqualTo(Priority.HIGH);
+        }
+
+        @Test
+        @DisplayName("priority가 null이면 NONE으로 설정된다")
+        void nullPriorityDefaultsToNone() {
+            var reminder = new Reminder("Task", sampleList());
+            reminder.update("Task", null, null, null, Priority.HIGH);
+
+            reminder.update("Task", null, null, null, null);
+
+            assertThat(reminder.getPriority()).isEqualTo(Priority.NONE);
         }
 
         @Test
@@ -60,7 +86,7 @@ class ReminderTest {
             var originalUpdatedAt = reminder.getUpdatedAt();
 
             Thread.sleep(10);
-            reminder.update("Updated");
+            reminder.update("Updated", null, null, null, null);
 
             assertThat(reminder.getUpdatedAt()).isAfter(originalUpdatedAt);
         }
@@ -71,17 +97,18 @@ class ReminderTest {
     class ToggleCompleted {
 
         @Test
-        @DisplayName("미완료 → 완료로 토글한다")
+        @DisplayName("미완료 → 완료로 토글하면 completedAt이 설정된다")
         void toggleToCompleted() {
             var reminder = new Reminder("Task", sampleList());
 
             reminder.toggleCompleted();
 
             assertThat(reminder.isCompleted()).isTrue();
+            assertThat(reminder.getCompletedAt()).isNotNull();
         }
 
         @Test
-        @DisplayName("완료 → 미완료로 토글한다")
+        @DisplayName("완료 → 미완료로 토글하면 completedAt이 null이 된다")
         void toggleBackToIncomplete() {
             var reminder = new Reminder("Task", sampleList());
             reminder.toggleCompleted();
@@ -89,6 +116,7 @@ class ReminderTest {
             reminder.toggleCompleted();
 
             assertThat(reminder.isCompleted()).isFalse();
+            assertThat(reminder.getCompletedAt()).isNull();
         }
 
         @Test
@@ -101,6 +129,21 @@ class ReminderTest {
             reminder.toggleCompleted();
 
             assertThat(reminder.getUpdatedAt()).isAfter(originalUpdatedAt);
+        }
+    }
+
+    @Nested
+    @DisplayName("updateDisplayOrder")
+    class UpdateDisplayOrder {
+
+        @Test
+        @DisplayName("표시 순서를 변경한다")
+        void updatesOrder() {
+            var reminder = new Reminder("Task", sampleList());
+
+            reminder.updateDisplayOrder(5);
+
+            assertThat(reminder.getDisplayOrder()).isEqualTo(5);
         }
     }
 }
