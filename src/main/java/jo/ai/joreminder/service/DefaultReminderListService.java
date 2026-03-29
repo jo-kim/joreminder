@@ -4,6 +4,7 @@ import jo.ai.joreminder.domain.ReminderList;
 import jo.ai.joreminder.dto.ReminderListRequest;
 import jo.ai.joreminder.dto.ReminderListResponse;
 import jo.ai.joreminder.repository.ReminderListRepository;
+import jo.ai.joreminder.repository.ReminderRepository;
 import jo.ai.joreminder.service.ports.in.ReminderListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,14 @@ import java.util.NoSuchElementException;
 public class DefaultReminderListService implements ReminderListService {
 
     private final ReminderListRepository reminderListRepository;
+    private final ReminderRepository reminderRepository;
 
     @Override
     public List<ReminderListResponse> findAll() {
         return reminderListRepository.findAll().stream()
-                .map(ReminderListResponse::from)
+                .map(list -> ReminderListResponse.from(
+                        list,
+                        reminderRepository.countByListIdAndCompletedFalse(list.getId())))
                 .toList();
     }
 

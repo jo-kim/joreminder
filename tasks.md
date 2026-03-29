@@ -4,32 +4,32 @@
 ## Phase 1: Backend 기본 CRUD
 
 ### 1-1. Entity & Repository
-- [ ] `ReminderList` 엔티티 생성 (id, name, color, isDefault, createdAt, updatedAt)
-- [ ] `Reminder` 엔티티 생성 (id, title, completed, listId, createdAt, updatedAt)
-- [ ] `ReminderListRepository` 인터페이스 생성
-- [ ] `ReminderRepository` 인터페이스 생성
+- [x] `ReminderList` 엔티티 생성 (id, name, color, isDefault, createdAt, updatedAt)
+- [x] `Reminder` 엔티티 생성 (id, title, completed, listId, createdAt, updatedAt)
+- [x] `ReminderListRepository` 인터페이스 생성
+- [x] `ReminderRepository` 인터페이스 생성
 
 ### 1-2. 목록 API
-- [ ] `ReminderListService` 구현
-- [ ] `ReminderListController` 구현
-- [ ] GET /api/lists — 전체 목록 조회 (리마인더 개수 포함)
-- [ ] POST /api/lists — 목록 생성
-- [ ] PUT /api/lists/{id} — 목록 수정
-- [ ] DELETE /api/lists/{id} — 목록 삭제 (기본 목록 보호)
+- [x] `ReminderListService` 구현
+- [x] `ReminderListController` 구현
+- [x] GET /api/lists — 전체 목록 조회 (리마인더 개수 포함)
+- [x] POST /api/lists — 목록 생성
+- [x] PUT /api/lists/{id} — 목록 수정
+- [x] DELETE /api/lists/{id} — 목록 삭제 (기본 목록 보호)
 
 ### 1-3. 리마인더 API
-- [ ] `ReminderService` 구현
-- [ ] `ReminderController` 구현
-- [ ] GET /api/lists/{listId}/reminders — 목록별 리마인더 조회
-- [ ] POST /api/reminders — 리마인더 생성
-- [ ] PUT /api/reminders/{id} — 리마인더 수정
-- [ ] PATCH /api/reminders/{id}/toggle — 완료 토글
-- [ ] DELETE /api/reminders/{id} — 리마인더 삭제
+- [x] `ReminderService` 구현
+- [x] `ReminderController` 구현
+- [x] GET /api/lists/{listId}/reminders — 목록별 리마인더 조회
+- [x] POST /api/reminders — 리마인더 생성
+- [x] PUT /api/reminders/{id} — 리마인더 수정
+- [x] PATCH /api/reminders/{id}/toggle — 완료 토글
+- [x] DELETE /api/reminders/{id} — 리마인더 삭제
 
 ### 1-4. 초기 데이터 & 검증
-- [ ] `ApplicationRunner`로 기본 목록 "미리 알림" 생성
-- [ ] `./gradlew build` 통과 확인
-- [ ] curl로 전체 CRUD 동작 확인
+- [x] `ApplicationRunner`로 기본 목록 "미리 알림" 생성
+- [x] `./gradlew build` 통과 확인
+- [x] curl로 전체 CRUD 동작 확인
 
 ---
 

@@ -4,6 +4,7 @@ import jo.ai.joreminder.domain.ReminderList;
 import jo.ai.joreminder.dto.ReminderListRequest;
 import jo.ai.joreminder.repository.ReminderListRepository;
 import jo.ai.joreminder.service.ports.in.ReminderListService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,11 @@ class DefaultReminderListServiceTest {
 
     @Autowired
     private ReminderListRepository repository;
+
+    @BeforeEach
+    void setUp() {
+        repository.deleteAll();
+    }
 
     @Nested
     @DisplayName("findAll")
