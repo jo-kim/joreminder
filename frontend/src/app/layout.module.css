@@ -12,10 +12,12 @@
   flex-direction: column;
   padding: 12px 0;
   overflow-y: auto;
+  position: relative;
 }
 
 .sidebarSection {
   padding: 0 12px;
+  flex: 1;
 }
 
 .sidebarTitle {
@@ -276,4 +278,162 @@
   font-size: 13px;
   font-weight: 500;
   font-family: inherit;
+}
+
+.dialogSave {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: var(--color-blue);
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.dialogSave:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Sidebar footer */
+.sidebarFooter {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.addListButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  width: 100%;
+  transition: background-color 0.15s;
+}
+
+.addListButton:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.addListIcon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* List modal */
+.modalField {
+  margin-bottom: 16px;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.modalInput:focus {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+/* Color palette */
+.colorPalette {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-items: center;
+}
+
+.colorSwatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.colorSwatch:hover {
+  transform: scale(1.15);
+}
+
+.colorSwatchSelected {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px currentColor;
+}
+
+/* Context menu */
+.contextMenu {
+  position: fixed;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+  min-width: 140px;
+  z-index: 200;
+}
+
+.contextMenuItem {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  text-align: left;
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+
+.contextMenuItem:hover {
+  background: var(--color-blue);
+  color: white;
+}
+
+.contextMenuItem:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.contextMenuItem:disabled:hover {
+  background: none;
+  color: var(--text-primary);
+}
+
+.contextMenuDanger {
+  color: var(--color-red);
+}
+
+.contextMenuDanger:hover {
+  background: var(--color-red);
+  color: white;
 }
