@@ -2,7 +2,14 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { ReminderList, Reminder } from "@/lib/types";
-import { fetchLists, fetchReminders, toggleReminder } from "@/lib/api";
+import {
+  fetchLists,
+  fetchReminders,
+  createReminder,
+  updateReminder,
+  toggleReminder,
+  deleteReminder,
+} from "@/lib/api";
 import Sidebar from "@/components/Sidebar";
 import MainContent from "@/components/MainContent";
 import styles from "./layout.module.css";
@@ -34,10 +41,31 @@ export default function Home() {
     loadReminders();
   }, [loadReminders]);
 
-  const handleToggle = async (id: number) => {
-    await toggleReminder(id);
+  const refresh = async () => {
     await loadReminders();
     await loadLists();
+  };
+
+  const handleToggle = async (id: number) => {
+    await toggleReminder(id);
+    await refresh();
+  };
+
+  const handleCreate = async (title: string) => {
+    if (selectedId === null) return;
+    await createReminder({ title, listId: selectedId });
+    await refresh();
+  };
+
+  const handleUpdate = async (id: number, title: string) => {
+    if (selectedId === null) return;
+    await updateReminder(id, { title, listId: selectedId });
+    await refresh();
+  };
+
+  const handleDelete = async (id: number) => {
+    await deleteReminder(id);
+    await refresh();
   };
 
   const selectedList = lists.find((l) => l.id === selectedId) ?? null;
@@ -49,6 +77,9 @@ export default function Home() {
         list={selectedList}
         reminders={reminders}
         onToggle={handleToggle}
+        onCreate={handleCreate}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
       />
     </div>
   );
