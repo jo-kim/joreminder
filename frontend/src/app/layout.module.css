@@ -38,6 +38,12 @@
   cursor: pointer;
   font-size: 15px;
   transition: background-color 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
 }
 
 .listItem:hover {
@@ -72,6 +78,15 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+}
+
+.errorBanner {
+  padding: 8px 24px;
+  background: rgba(255, 59, 48, 0.1);
+  color: var(--color-red);
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 59, 48, 0.2);
 }
 
 .mainHeader {
@@ -494,7 +509,8 @@
 }
 
 .colorSwatchSelected {
-  box-shadow: 0 0 0 2px white, 0 0 0 4px currentColor;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-blue);
+  transform: scale(1.15);
 }
 
 /* Context menu */

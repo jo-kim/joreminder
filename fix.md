@@ -30,23 +30,23 @@
 
 ### Critical
 
-- [ ] **F-C1.** API 에러 핸들링 — 모든 async 핸들러에 try/catch 추가, 에러 상태 UI 표시 (toast 또는 에러 메시지)
-- [ ] **F-C2.** `loadLists`의 `selectedId` 의존성 순환 수정 — 초기 선택 로직 분리하여 불필요한 재호출 방지
-- [ ] **F-C3.** `ReminderRow` click-outside `useEffect` — 의존성 배열 정리, 매 렌더마다 이벤트 리스너 등록/해제 반복 제거
+- [x] **F-C1.** API 에러 핸들링 — 모든 async 핸들러에 try/catch 추가, 에러 상태 UI 표시 (toast 또는 에러 메시지)
+- [x] **F-C2.** `loadLists`의 `selectedId` 의존성 순환 수정 — 초기 선택 로직 분리하여 불필요한 재호출 방지
+- [x] **F-C3.** `ReminderRow` click-outside `useEffect` — 의존성 배열 정리, 매 렌더마다 이벤트 리스너 등록/해제 반복 제거
 
 ### Major
 
-- [ ] **F-M1.** `api.ts:13` — `undefined as T` 캐스팅 개선 (반환 타입 안전성 확보)
-- [ ] **F-M2.** `ConfirmDialog` / `ListModal`에 Escape 키 닫기 지원
-- [ ] **F-M3.** 접근성 개선 — 사이드바 목록 항목을 `<button>` 또는 `role="button"` + `tabIndex`로 변경, 체크박스에 `aria-label` 추가
-- [ ] **F-M4.** `colorSwatchSelected`의 `currentColor` box-shadow — inline `backgroundColor`와 충돌, 명시적 색상으로 수정
+- [x] **F-M1.** `api.ts:13` — `undefined as T` 캐스팅 개선 (반환 타입 안전성 확보)
+- [x] **F-M2.** `ConfirmDialog` / `ListModal`에 Escape 키 닫기 지원
+- [x] **F-M3.** 접근성 개선 — 사이드바 목록 항목을 `<button>` 또는 `role="button"` + `tabIndex`로 변경, 체크박스에 `aria-label` 추가
+- [x] **F-M4.** `colorSwatchSelected`의 `currentColor` box-shadow — inline `backgroundColor`와 충돌, 명시적 색상으로 수정
 
 ### Minor
 
-- [ ] **F-m1.** `ReminderRow` 날짜 포맷 — `new Date(d + "T00:00:00")` 타임존 안전하게 처리
-- [ ] **F-m2.** `ListModal` prop 타입 정리 — `list?: ReminderList | null` 중복 제거
-- [ ] **F-m3.** 로딩 상태 UI 추가 — 목록/리마인더 로딩 시 스피너 또는 스켈레톤
-- [ ] **F-m4.** `ConfirmDialog` 확인 버튼 텍스트 — "삭제" 하드코딩 → prop으로 커스텀 가능하게
+- [x] **F-m1.** `ReminderRow` 날짜 포맷 — `new Date(d + "T00:00:00")` 타임존 안전하게 처리
+- [x] **F-m2.** `ListModal` prop 타입 정리 — `list?: ReminderList | null` 중복 제거
+- [x] **F-m3.** 로딩 상태 UI 추가 — 목록/리마인더 로딩 시 스피너 또는 스켈레톤
+- [x] **F-m4.** `ConfirmDialog` 확인 버튼 텍스트 — "삭제" 하드코딩 → prop으로 커스텀 가능하게
 
 ---
 

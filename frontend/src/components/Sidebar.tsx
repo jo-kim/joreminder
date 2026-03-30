@@ -41,13 +41,15 @@ export default function Sidebar({
       <div className={styles.sidebarSection}>
         <div className={styles.sidebarTitle}>나의 목록</div>
         {lists.map((list) => (
-          <div
+          <button
             key={list.id}
             className={`${styles.listItem} ${
               selectedId === list.id ? styles.listItemSelected : ""
             }`}
             onClick={() => onSelect(list.id)}
             onContextMenu={(e) => handleContextMenu(e, list)}
+            aria-label={`${list.name} 목록, 리마인더 ${list.reminderCount}개`}
+            aria-current={selectedId === list.id ? "true" : undefined}
           >
             <div
               className={styles.listBullet}
@@ -57,7 +59,7 @@ export default function Sidebar({
             <span className={styles.listCount}>
               {list.reminderCount > 0 ? list.reminderCount : ""}
             </span>
-          </div>
+          </button>
         ))}
       </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Reminder, Priority } from "@/lib/types";
 import styles from "@/app/layout.module.css";
 
@@ -40,7 +40,7 @@ export default function ReminderRow({
   const [memo, setMemo] = useState(reminder.memo ?? "");
   const [dueDate, setDueDate] = useState(reminder.dueDate ?? "");
   const [dueTime, setDueTime] = useState(reminder.dueTime ?? "");
-  const [priority, setPriority] = useState<Priority>(reminder.priority);
+  const [priority, setPriority] = useState<Priority>(reminder.priority ?? "NONE");
   const titleRef = useRef<HTMLInputElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
 
@@ -55,21 +55,10 @@ export default function ReminderRow({
     setMemo(reminder.memo ?? "");
     setDueDate(reminder.dueDate ?? "");
     setDueTime(reminder.dueTime ?? "");
-    setPriority(reminder.priority);
+    setPriority(reminder.priority ?? "NONE");
   }, [reminder]);
 
-  useEffect(() => {
-    if (!editing) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (rowRef.current && !rowRef.current.contains(e.target as Node)) {
-        handleSave();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  });
-
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setEditing(false);
     const trimmedTitle = title.trim();
     if (!trimmedTitle) {
@@ -93,14 +82,22 @@ export default function ReminderRow({
         priority,
       });
     }
-  };
+  }, [title, memo, dueDate, dueTime, priority, reminder, onUpdate]);
+
+  useEffect(() => {
+    if (!editing) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (rowRef.current && !rowRef.current.contains(e.target as Node)) {
+        handleSave();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [editing, handleSave]);
 
   const formatDueDate = (d: string) => {
-    const date = new Date(d + "T00:00:00");
-    return date.toLocaleDateString("ko-KR", {
-      month: "long",
-      day: "numeric",
-    });
+    const [year, month, day] = d.split("-").map(Number);
+    return `${month}월 ${day}일`;
   };
 
   return (
@@ -115,6 +112,7 @@ export default function ReminderRow({
             : { borderColor: listColor }
         }
         onClick={() => onToggle(reminder.id)}
+        aria-label={reminder.completed ? "완료 해제" : "완료로 표시"}
       >
         {reminder.completed && <span className={styles.checkmark}>✓</span>}
       </button>
@@ -133,7 +131,7 @@ export default function ReminderRow({
                   setMemo(reminder.memo ?? "");
                   setDueDate(reminder.dueDate ?? "");
                   setDueTime(reminder.dueTime ?? "");
-                  setPriority(reminder.priority);
+                  setPriority(reminder.priority ?? "NONE");
                   setEditing(false);
                 }
               }}
@@ -215,7 +213,7 @@ export default function ReminderRow({
         <button
           className={styles.deleteButton}
           onClick={() => onDelete(reminder.id)}
-          title="삭제"
+          aria-label="삭제"
         >
           ✕
         </button>

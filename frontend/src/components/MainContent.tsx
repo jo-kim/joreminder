@@ -23,6 +23,9 @@ interface MainContentProps {
     }
   ) => void;
   onDelete: (id: number) => void;
+  loading?: boolean;
+  error?: string | null;
+  onDismissError?: () => void;
 }
 
 export default function MainContent({
@@ -32,6 +35,9 @@ export default function MainContent({
   onCreate,
   onUpdate,
   onDelete,
+  loading,
+  error,
+  onDismissError,
 }: MainContentProps) {
   const [adding, setAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -43,6 +49,14 @@ export default function MainContent({
       inputRef.current.focus();
     }
   }, [adding]);
+
+  if (loading) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.emptyState}>불러오는 중...</div>
+      </main>
+    );
+  }
 
   if (!list) {
     return (
@@ -74,6 +88,11 @@ export default function MainContent({
 
   return (
     <main className={styles.main}>
+      {error && (
+        <div className={styles.errorBanner} onClick={onDismissError}>
+          {error}
+        </div>
+      )}
       <div className={styles.mainHeader}>
         <h1 className={styles.mainTitle} style={{ color }}>
           {list.name}
@@ -142,6 +161,7 @@ export default function MainContent({
         <ConfirmDialog
           title="리마인더 삭제"
           message="이 리마인더를 삭제하시겠습니까?"
+          confirmLabel="삭제"
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeleteTarget(null)}
         />

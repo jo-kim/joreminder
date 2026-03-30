@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { ReminderList, Reminder, Priority } from "@/lib/types";
 import {
   fetchLists,
@@ -30,28 +30,59 @@ export default function Home() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [deleteTarget, setDeleteTarget] = useState<ReminderList | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const initializedRef = useRef(false);
 
   const loadLists = useCallback(async () => {
-    const data = await fetchLists();
-    setLists(data);
-    if (data.length > 0 && selectedId === null) {
-      setSelectedId(data[0].id);
+    try {
+      const data = await fetchLists();
+      setLists(data);
+      return data;
+    } catch {
+      setError("목록을 불러오는데 실패했습니다.");
+      return [];
+    }
+  }, []);
+
+  const loadReminders = useCallback(async () => {
+    if (selectedId === null) {
+      setReminders([]);
+      return;
+    }
+    try {
+      const data = await fetchReminders(selectedId);
+      setReminders(data);
+    } catch {
+      setError("리마인더를 불러오는데 실패했습니다.");
     }
   }, [selectedId]);
 
-  const loadReminders = useCallback(async () => {
-    if (selectedId === null) return;
-    const data = await fetchReminders(selectedId);
-    setReminders(data);
-  }, [selectedId]);
-
+  // Initial load — select first list only once
   useEffect(() => {
-    loadLists();
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+    (async () => {
+      const data = await loadLists();
+      if (data.length > 0) {
+        setSelectedId(data[0].id);
+      }
+      setLoading(false);
+    })();
   }, [loadLists]);
 
   useEffect(() => {
     loadReminders();
   }, [loadReminders]);
+
+  const withErrorHandling = async (fn: () => Promise<void>) => {
+    try {
+      setError(null);
+      await fn();
+    } catch {
+      setError("작업 중 오류가 발생했습니다.");
+    }
+  };
 
   const refresh = async () => {
     await loadReminders();
@@ -59,18 +90,20 @@ export default function Home() {
   };
 
   // Reminder handlers
-  const handleToggle = async (id: number) => {
-    await toggleReminder(id);
-    await refresh();
-  };
+  const handleToggle = (id: number) =>
+    withErrorHandling(async () => {
+      await toggleReminder(id);
+      await refresh();
+    });
 
-  const handleCreate = async (title: string) => {
-    if (selectedId === null) return;
-    await createReminder({ title, listId: selectedId });
-    await refresh();
-  };
+  const handleCreate = (title: string) =>
+    withErrorHandling(async () => {
+      if (selectedId === null) return;
+      await createReminder({ title, listId: selectedId });
+      await refresh();
+    });
 
-  const handleUpdate = async (
+  const handleUpdate = (
     id: number,
     fields: {
       title: string;
@@ -79,39 +112,43 @@ export default function Home() {
       dueTime?: string | null;
       priority?: Priority | null;
     }
-  ) => {
-    if (selectedId === null) return;
-    await updateReminder(id, { ...fields, listId: selectedId });
-    await refresh();
-  };
+  ) =>
+    withErrorHandling(async () => {
+      if (selectedId === null) return;
+      await updateReminder(id, { ...fields, listId: selectedId });
+      await refresh();
+    });
 
-  const handleDelete = async (id: number) => {
-    await deleteReminder(id);
-    await refresh();
-  };
+  const handleDelete = (id: number) =>
+    withErrorHandling(async () => {
+      await deleteReminder(id);
+      await refresh();
+    });
 
   // List handlers
-  const handleListSave = async (name: string, color: string) => {
-    if (modalMode?.type === "edit") {
-      await updateList(modalMode.list.id, { name, color });
-    } else {
-      const created = await createList({ name, color });
-      setSelectedId(created.id);
-    }
-    setModalMode(null);
-    await loadLists();
-  };
+  const handleListSave = (name: string, color: string) =>
+    withErrorHandling(async () => {
+      if (modalMode?.type === "edit") {
+        await updateList(modalMode.list.id, { name, color });
+      } else {
+        const created = await createList({ name, color });
+        setSelectedId(created.id);
+      }
+      setModalMode(null);
+      await loadLists();
+    });
 
-  const handleListDelete = async () => {
-    if (!deleteTarget) return;
-    await deleteList(deleteTarget.id);
-    setDeleteTarget(null);
-    if (selectedId === deleteTarget.id) {
-      const remaining = lists.filter((l) => l.id !== deleteTarget.id);
-      setSelectedId(remaining.length > 0 ? remaining[0].id : null);
-    }
-    await loadLists();
-  };
+  const handleListDelete = () =>
+    withErrorHandling(async () => {
+      if (!deleteTarget) return;
+      await deleteList(deleteTarget.id);
+      setDeleteTarget(null);
+      if (selectedId === deleteTarget.id) {
+        const remaining = lists.filter((l) => l.id !== deleteTarget.id);
+        setSelectedId(remaining.length > 0 ? remaining[0].id : null);
+      }
+      await loadLists();
+    });
 
   const selectedList = lists.find((l) => l.id === selectedId) ?? null;
 
@@ -132,6 +169,9 @@ export default function Home() {
         onCreate={handleCreate}
         onUpdate={handleUpdate}
         onDelete={handleDelete}
+        loading={loading}
+        error={error}
+        onDismissError={() => setError(null)}
       />
 
       {modalMode && (
@@ -146,6 +186,7 @@ export default function Home() {
         <ConfirmDialog
           title="목록 삭제"
           message={`"${deleteTarget.name}" 목록과 포함된 모든 리마인더가 삭제됩니다.`}
+          confirmLabel="삭제"
           onConfirm={handleListDelete}
           onCancel={() => setDeleteTarget(null)}
         />

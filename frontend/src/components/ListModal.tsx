@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { ReminderList } from "@/lib/types";
 import { COLOR_MAP, getColor } from "@/lib/colors";
 import styles from "@/app/layout.module.css";
@@ -8,7 +8,7 @@ import styles from "@/app/layout.module.css";
 const COLOR_KEYS = Object.keys(COLOR_MAP);
 
 interface ListModalProps {
-  list?: ReminderList | null;
+  list: ReminderList | null;
   onSave: (name: string, color: string) => void;
   onCancel: () => void;
 }
@@ -18,9 +18,18 @@ export default function ListModal({ list, onSave, onCancel }: ListModalProps) {
   const [color, setColor] = useState(list?.color ?? "BLUE");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const handleEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+    },
+    [onCancel]
+  );
+
   useEffect(() => {
     inputRef.current?.focus();
-  }, []);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [handleEscape]);
 
   const handleSubmit = () => {
     const trimmed = name.trim();
