@@ -165,6 +165,19 @@ class DefaultReminderListServiceTest {
         }
 
         @Test
+        @DisplayName("목록 삭제 시 소속 리마인더도 삭제된다")
+        void deletesRemindersWithList() {
+            var list = repository.save(new ReminderList("Work", "RED"));
+            reminderRepository.save(new Reminder("Task 1", list));
+            reminderRepository.save(new Reminder("Task 2", list));
+
+            service.delete(list.getId());
+
+            assertThat(repository.findById(list.getId())).isEmpty();
+            assertThat(reminderRepository.findByListIdOrderByCreatedAt(list.getId())).isEmpty();
+        }
+
+        @Test
         @DisplayName("기본 목록 삭제 시 예외를 던진다")
         void throwsWhenDeletingDefault() {
             var defaultList = repository.save(ReminderList.createDefault("미리 알림"));

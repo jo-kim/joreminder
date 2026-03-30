@@ -64,6 +64,7 @@ public class DefaultReminderListService implements ReminderListService {
         if (list.isDefault()) {
             throw new IllegalStateException("기본 목록은 삭제할 수 없습니다.");
         }
+        reminderRepository.deleteAll(reminderRepository.findByListIdOrderByCreatedAt(id));
         reminderListRepository.delete(list);
     }
 
