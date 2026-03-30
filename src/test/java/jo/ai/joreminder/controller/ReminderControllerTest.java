@@ -72,6 +72,29 @@ class ReminderControllerTest {
     }
 
     @Nested
+    @DisplayName("GET /api/reminders/{id}")
+    class FindById {
+
+        @Test
+        @DisplayName("200 — 리마인더를 반환한다")
+        void returnsReminder() throws Exception {
+            var saved = reminderRepository.save(new Reminder("Task", savedList));
+
+            mockMvc.perform(get("/api/reminders/{id}", saved.getId()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(saved.getId()))
+                    .andExpect(jsonPath("$.title").value("Task"));
+        }
+
+        @Test
+        @DisplayName("404 — 존재하지 않는 리마인더")
+        void returnsNotFound() throws Exception {
+            mockMvc.perform(get("/api/reminders/{id}", 999))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
     @DisplayName("POST /api/reminders")
     class Create {
 

@@ -23,6 +23,11 @@ public class ReminderListController {
         return ResponseEntity.ok(reminderListService.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ReminderListResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(reminderListService.findById(id));
+    }
+
     @PostMapping
     public ResponseEntity<ReminderListResponse> create(@Valid @RequestBody ReminderListRequest request) {
         var created = reminderListService.create(request);

@@ -9,6 +9,8 @@ public interface ReminderService {
 
     List<ReminderResponse> findByListId(Long listId);
 
+    ReminderResponse findById(Long id);
+
     ReminderResponse create(ReminderRequest request);
 
     ReminderResponse update(Long id, ReminderRequest request);

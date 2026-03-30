@@ -32,6 +32,11 @@ public class DefaultReminderService implements ReminderService {
     }
 
     @Override
+    public ReminderResponse findById(Long id) {
+        return ReminderResponse.from(getById(id));
+    }
+
+    @Override
     @Transactional
     public ReminderResponse create(ReminderRequest request) {
         var list = reminderListRepository.findById(request.listId())

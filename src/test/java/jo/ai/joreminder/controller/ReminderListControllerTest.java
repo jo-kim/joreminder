@@ -65,6 +65,29 @@ class ReminderListControllerTest {
     }
 
     @Nested
+    @DisplayName("GET /api/lists/{id}")
+    class FindById {
+
+        @Test
+        @DisplayName("200 — 목록을 반환한다")
+        void returnsList() throws Exception {
+            var saved = repository.save(new ReminderList("Work", "RED"));
+
+            mockMvc.perform(get("/api/lists/{id}", saved.getId()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(saved.getId()))
+                    .andExpect(jsonPath("$.name").value("Work"));
+        }
+
+        @Test
+        @DisplayName("404 — 존재하지 않는 목록")
+        void returnsNotFound() throws Exception {
+            mockMvc.perform(get("/api/lists/{id}", 999))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
     @DisplayName("POST /api/lists")
     class Create {
 

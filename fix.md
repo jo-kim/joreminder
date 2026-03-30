@@ -15,7 +15,7 @@
 - [x] **B-M1.** `findById()`에서 reminderCount 0 고정 수정 — `findAll()`과 동일하게 카운트 포함
 - [x] **B-M2.** 목록 삭제 시 cascade 처리 — `CascadeType.REMOVE` 설정 또는 서비스에서 소속 리마인더 명시적 삭제
 - [x] **B-M3.** `GlobalExceptionHandler`에 `HttpMessageNotReadableException` 핸들러 추가 (400 응답)
-- [ ] **B-M4.** 단건 조회 API 추가 — `GET /api/reminders/{id}`, `GET /api/lists/{id}`
+- [x] **B-M4.** 단건 조회 API 추가 — `GET /api/reminders/{id}`, `GET /api/lists/{id}`
 
 ### Minor
 

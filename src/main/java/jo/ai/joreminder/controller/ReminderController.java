@@ -22,6 +22,11 @@ public class ReminderController {
         return ResponseEntity.ok(reminderService.findByListId(listId));
     }
 
+    @GetMapping("/api/reminders/{id}")
+    public ResponseEntity<ReminderResponse> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(reminderService.findById(id));
+    }
+
     @PostMapping("/api/reminders")
     public ResponseEntity<ReminderResponse> create(@Valid @RequestBody ReminderRequest request) {
         var created = reminderService.create(request);
