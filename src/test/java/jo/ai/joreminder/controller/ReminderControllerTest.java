@@ -17,6 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -193,6 +196,31 @@ class ReminderControllerTest {
         void returnsNotFound() throws Exception {
             mockMvc.perform(patch("/api/reminders/{id}/toggle", 999))
                     .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("PATCH /api/reminders/reorder")
+    class Reorder {
+
+        @Test
+        @DisplayName("200 — 리마인더 순서를 변경한다")
+        void reordersReminders() throws Exception {
+            var r1 = reminderRepository.save(new Reminder("First", savedList));
+            var r2 = reminderRepository.save(new Reminder("Second", savedList));
+
+            var body = List.of(
+                    java.util.Map.of("id", r2.getId(), "displayOrder", 0),
+                    java.util.Map.of("id", r1.getId(), "displayOrder", 1)
+            );
+
+            mockMvc.perform(patch("/api/reminders/reorder")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(body)))
+                    .andExpect(status().isOk());
+
+            var reordered = reminderRepository.findById(r1.getId()).orElseThrow();
+            assertThat(reordered.getDisplayOrder()).isEqualTo(1);
         }
     }
 

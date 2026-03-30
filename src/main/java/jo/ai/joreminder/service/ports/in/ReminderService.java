@@ -1,5 +1,6 @@
 package jo.ai.joreminder.service.ports.in;
 
+import jo.ai.joreminder.dto.ReorderRequest;
 import jo.ai.joreminder.dto.ReminderRequest;
 import jo.ai.joreminder.dto.ReminderResponse;
 
@@ -18,4 +19,6 @@ public interface ReminderService {
     ReminderResponse toggle(Long id);
 
     void delete(Long id);
+
+    void reorder(List<ReorderRequest> requests);
 }

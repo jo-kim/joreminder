@@ -1,6 +1,7 @@
 package jo.ai.joreminder.service;
 
 import jo.ai.joreminder.domain.Reminder;
+import jo.ai.joreminder.dto.ReorderRequest;
 import jo.ai.joreminder.dto.ReminderRequest;
 import jo.ai.joreminder.dto.ReminderResponse;
 import jo.ai.joreminder.repository.ReminderListRepository;
@@ -69,6 +70,15 @@ public class DefaultReminderService implements ReminderService {
     public void delete(Long id) {
         var reminder = getById(id);
         reminderRepository.delete(reminder);
+    }
+
+    @Override
+    @Transactional
+    public void reorder(List<ReorderRequest> requests) {
+        for (var req : requests) {
+            var reminder = getById(req.id());
+            reminder.updateDisplayOrder(req.displayOrder());
+        }
     }
 
     private Reminder getById(Long id) {

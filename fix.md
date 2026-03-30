@@ -20,9 +20,9 @@
 ### Minor
 
 - [x] **B-m1.** `GlobalExceptionHandler` — `IllegalStateException` 매핑을 400 → 409로 변경
-- [ ] **B-m2.** `application.properties` — profile 분리하여 프로덕션에서 `ddl-auto=validate`, `show-sql=false` 적용
-- [ ] **B-m3.** `BaseEntity` — 타임존 명시 (`LocalDateTime.now()` → `Instant` 또는 `ZonedDateTime` 고려)
-- [ ] **B-m4.** `displayOrder` 업데이트 API 추가 — 도메인에 메서드는 있지만 서비스/컨트롤러 미노출
+- [x] **B-m2.** `application.properties` — profile 분리하여 프로덕션에서 `ddl-auto=validate`, `show-sql=false` 적용
+- [x] **B-m3.** `BaseEntity` — 타임존 명시 (`LocalDateTime.now()` → `Instant` 또는 `ZonedDateTime` 고려)
+- [x] **B-m4.** `displayOrder` 업데이트 API 추가 — 도메인에 메서드는 있지만 서비스/컨트롤러 미노출
 
 ---
 

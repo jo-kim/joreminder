@@ -1,6 +1,7 @@
 package jo.ai.joreminder.controller;
 
 import jakarta.validation.Valid;
+import jo.ai.joreminder.dto.ReorderRequest;
 import jo.ai.joreminder.dto.ReminderRequest;
 import jo.ai.joreminder.dto.ReminderResponse;
 import jo.ai.joreminder.service.ports.in.ReminderService;
@@ -37,6 +38,12 @@ public class ReminderController {
     public ResponseEntity<ReminderResponse> update(@PathVariable Long id,
                                                    @Valid @RequestBody ReminderRequest request) {
         return ResponseEntity.ok(reminderService.update(id, request));
+    }
+
+    @PatchMapping("/api/reminders/reorder")
+    public ResponseEntity<Void> reorder(@RequestBody List<ReorderRequest> requests) {
+        reminderService.reorder(requests);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/api/reminders/{id}/toggle")
