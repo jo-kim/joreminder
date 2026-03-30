@@ -37,6 +37,23 @@ class ReminderTest {
         }
 
         @Test
+        @DisplayName("상세 필드를 포함하여 생성한다")
+        void createWithDetailFields() {
+            var list = sampleList();
+            var dueDate = LocalDate.of(2026, 4, 1);
+            var dueTime = LocalTime.of(9, 30);
+            var reminder = new Reminder("Task", list, "메모", dueDate, dueTime, Priority.HIGH);
+
+            assertThat(reminder.getTitle()).isEqualTo("Task");
+            assertThat(reminder.getMemo()).isEqualTo("메모");
+            assertThat(reminder.getDueDate()).isEqualTo(dueDate);
+            assertThat(reminder.getDueTime()).isEqualTo(dueTime);
+            assertThat(reminder.getPriority()).isEqualTo(Priority.HIGH);
+            assertThat(reminder.getList()).isSameAs(list);
+            assertThat(reminder.getCreatedAt()).isNotNull();
+        }
+
+        @Test
         @DisplayName("생성 시 타임스탬프가 자동 설정된다")
         void timestampsSetOnCreation() {
             var before = java.time.LocalDateTime.now();

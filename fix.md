@@ -8,7 +8,7 @@
 
 - [x] **B-C1.** DTO 입력 검증 추가 — `ReminderRequest`, `ReminderListRequest`에 `@NotBlank`/`@NotNull` 어노테이션 추가, Controller에 `@Valid` 적용
 - [x] **B-C2.** N+1 쿼리 해결 — `DefaultReminderListService.findAll()`에서 목록별 카운트를 단일 쿼리로 변경 (`@Query` 또는 `countByListId` 배치 조회)
-- [ ] **B-C3.** Reminder 생성 로직 정리 — 생성자 호출 직후 불필요한 조건부 `update()` 제거, 생성 시 상세 필드를 받는 생성자 또는 팩토리 메서드 추가
+- [x] **B-C3.** Reminder 생성 로직 정리 — 생성자 호출 직후 불필요한 조건부 `update()` 제거, 생성 시 상세 필드를 받는 생성자 또는 팩토리 메서드 추가
 
 ### Major
 

@@ -44,6 +44,16 @@ public class Reminder extends BaseEntity {
         initTimestamps();
     }
 
+    public Reminder(String title, ReminderList list, String memo, LocalDate dueDate, LocalTime dueTime, Priority priority) {
+        this.title = title;
+        this.list = list;
+        this.memo = memo;
+        this.dueDate = dueDate;
+        this.dueTime = dueTime;
+        this.priority = priority != null ? priority : Priority.NONE;
+        initTimestamps();
+    }
+
     public void update(String title, String memo, LocalDate dueDate, LocalTime dueTime, Priority priority) {
         this.title = title;
         this.memo = memo;
