@@ -54,13 +54,13 @@
 
 ### High
 
-- [ ] **T-H1.** `Thread.sleep(10)` 제거 — `ReminderTest`, `ReminderListTest`의 타이밍 의존 테스트를 `isNotEqualTo` 비교 또는 `Clock` 주입으로 변경
-- [ ] **T-H2.** 컨트롤러 테스트에 Phase 5 필드 검증 추가 — POST/PUT 응답에서 memo, dueDate, dueTime, priority 확인
-- [ ] **T-H3.** 서비스 테스트 `toggle()` — `completedAt` 설정/해제 검증 추가
+- [x] **T-H1.** `Thread.sleep(10)` 제거 — `ReminderTest`, `ReminderListTest`의 타이밍 의존 테스트를 `isNotEqualTo` 비교 또는 `Clock` 주입으로 변경
+- [x] **T-H2.** 컨트롤러 테스트에 Phase 5 필드 검증 추가 — POST/PUT 응답에서 memo, dueDate, dueTime, priority 확인
+- [x] **T-H3.** 서비스 테스트 `toggle()` — `completedAt` 설정/해제 검증 추가
 
 ### Medium
 
-- [ ] **T-M1.** 도메인 테스트 — null 필드 부분 업데이트 테스트 (memo만 변경, dueDate만 클리어 등)
-- [ ] **T-M2.** 컨트롤러 테스트 — 잘못된 JSON 요청(필수 필드 누락) 시 400 응답 검증
-- [ ] **T-M3.** `displayOrder` 관련 테스트 추가 (도메인 + 서비스)
-- [ ] **T-M4.** 목록 삭제 시 소속 리마인더 처리 테스트 (cascade 또는 에러 검증)
+- [x] **T-M1.** 도메인 테스트 — null 필드 부분 업데이트 테스트 (memo만 변경, dueDate만 클리어 등)
+- [x] **T-M2.** 컨트롤러 테스트 — 잘못된 JSON 요청(필수 필드 누락) 시 400 응답 검증
+- [x] **T-M3.** `displayOrder` 관련 테스트 추가 (도메인 + 서비스)
+- [x] **T-M4.** 목록 삭제 시 소속 리마인더 처리 테스트 (cascade 또는 에러 검증)

@@ -1,9 +1,11 @@
 package jo.ai.joreminder.controller;
 
 import tools.jackson.databind.ObjectMapper;
+import jo.ai.joreminder.domain.Reminder;
 import jo.ai.joreminder.domain.ReminderList;
 import jo.ai.joreminder.dto.ReminderListRequest;
 import jo.ai.joreminder.repository.ReminderListRepository;
+import jo.ai.joreminder.repository.ReminderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,8 +36,12 @@ class ReminderListControllerTest {
     @Autowired
     private ReminderListRepository repository;
 
+    @Autowired
+    private ReminderRepository reminderRepository;
+
     @BeforeEach
     void setUp() {
+        reminderRepository.deleteAll();
         repository.deleteAll();
     }
 
@@ -159,6 +166,18 @@ class ReminderListControllerTest {
 
             mockMvc.perform(delete("/api/lists/{id}", saved.getId()))
                     .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @DisplayName("204 — 리마인더가 있는 목록도 삭제된다")
+        void deletesListWithReminders() throws Exception {
+            var list = repository.save(new ReminderList("Work", "RED"));
+            reminderRepository.save(new Reminder("Task", list));
+
+            mockMvc.perform(delete("/api/lists/{id}", list.getId()))
+                    .andExpect(status().isNoContent());
+
+            assertThat(reminderRepository.findByListIdOrderByCreatedAt(list.getId())).isEmpty();
         }
 
         @Test

@@ -86,6 +86,30 @@ class ReminderTest {
         }
 
         @Test
+        @DisplayName("memo만 변경하고 나머지는 null로 유지한다")
+        void updateMemoOnly() {
+            var reminder = new Reminder("Task", sampleList());
+
+            reminder.update("Task", "새 메모", null, null, null);
+
+            assertThat(reminder.getMemo()).isEqualTo("새 메모");
+            assertThat(reminder.getDueDate()).isNull();
+            assertThat(reminder.getDueTime()).isNull();
+            assertThat(reminder.getPriority()).isEqualTo(Priority.NONE);
+        }
+
+        @Test
+        @DisplayName("기존 dueDate를 null로 클리어한다")
+        void clearDueDate() {
+            var reminder = new Reminder("Task", sampleList());
+            reminder.update("Task", null, LocalDate.of(2026, 4, 1), null, null);
+
+            reminder.update("Task", null, null, null, null);
+
+            assertThat(reminder.getDueDate()).isNull();
+        }
+
+        @Test
         @DisplayName("priority가 null이면 NONE으로 설정된다")
         void nullPriorityDefaultsToNone() {
             var reminder = new Reminder("Task", sampleList());
@@ -98,14 +122,13 @@ class ReminderTest {
 
         @Test
         @DisplayName("update 시 updatedAt이 갱신된다")
-        void updateRefreshesUpdatedAt() throws InterruptedException {
+        void updateRefreshesUpdatedAt() {
             var reminder = new Reminder("Task", sampleList());
             var originalUpdatedAt = reminder.getUpdatedAt();
 
-            Thread.sleep(10);
             reminder.update("Updated", null, null, null, null);
 
-            assertThat(reminder.getUpdatedAt()).isAfter(originalUpdatedAt);
+            assertThat(reminder.getUpdatedAt()).isNotEqualTo(originalUpdatedAt);
         }
     }
 
@@ -138,14 +161,13 @@ class ReminderTest {
 
         @Test
         @DisplayName("토글 시 updatedAt이 갱신된다")
-        void toggleRefreshesUpdatedAt() throws InterruptedException {
+        void toggleRefreshesUpdatedAt() {
             var reminder = new Reminder("Task", sampleList());
             var originalUpdatedAt = reminder.getUpdatedAt();
 
-            Thread.sleep(10);
             reminder.toggleCompleted();
 
-            assertThat(reminder.getUpdatedAt()).isAfter(originalUpdatedAt);
+            assertThat(reminder.getUpdatedAt()).isNotEqualTo(originalUpdatedAt);
         }
     }
 
@@ -161,6 +183,17 @@ class ReminderTest {
             reminder.updateDisplayOrder(5);
 
             assertThat(reminder.getDisplayOrder()).isEqualTo(5);
+        }
+
+        @Test
+        @DisplayName("순서 변경 시 updatedAt이 갱신된다")
+        void updatesOrderRefreshesUpdatedAt() {
+            var reminder = new Reminder("Task", sampleList());
+            var originalUpdatedAt = reminder.getUpdatedAt();
+
+            reminder.updateDisplayOrder(3);
+
+            assertThat(reminder.getUpdatedAt()).isNotEqualTo(originalUpdatedAt);
         }
     }
 }

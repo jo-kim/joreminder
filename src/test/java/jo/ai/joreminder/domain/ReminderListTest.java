@@ -85,16 +85,15 @@ class ReminderListTest {
 
         @Test
         @DisplayName("update 시 updatedAt이 갱신되고 createdAt은 유지된다")
-        void updateRefreshesUpdatedAt() throws InterruptedException {
+        void updateRefreshesUpdatedAt() {
             var list = new ReminderList("Work", "BLUE");
             var originalCreatedAt = list.getCreatedAt();
             var originalUpdatedAt = list.getUpdatedAt();
 
-            Thread.sleep(10);
             list.update("Updated", "RED");
 
             assertThat(list.getCreatedAt()).isEqualTo(originalCreatedAt);
-            assertThat(list.getUpdatedAt()).isAfter(originalUpdatedAt);
+            assertThat(list.getUpdatedAt()).isNotEqualTo(originalUpdatedAt);
         }
     }
 }

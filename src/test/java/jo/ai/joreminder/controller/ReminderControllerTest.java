@@ -1,10 +1,14 @@
 package jo.ai.joreminder.controller;
 
+import jo.ai.joreminder.domain.Priority;
 import jo.ai.joreminder.domain.Reminder;
 import jo.ai.joreminder.domain.ReminderList;
 import jo.ai.joreminder.dto.ReminderRequest;
 import jo.ai.joreminder.repository.ReminderListRepository;
 import jo.ai.joreminder.repository.ReminderRepository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -117,6 +121,23 @@ class ReminderControllerTest {
         }
 
         @Test
+        @DisplayName("201 — 상세 필드와 함께 리마인더를 생성한다")
+        void createsWithDetailFields() throws Exception {
+            var request = new ReminderRequest("Task", savedList.getId(),
+                    "메모", LocalDate.of(2026, 4, 1), LocalTime.of(9, 0), Priority.HIGH);
+
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.memo").value("메모"))
+                    .andExpect(jsonPath("$.dueDate").value("2026-04-01"))
+                    .andExpect(jsonPath("$.dueTime").value("09:00:00"))
+                    .andExpect(jsonPath("$.priority").value("HIGH"))
+                    .andExpect(jsonPath("$.displayOrder").value(0));
+        }
+
+        @Test
         @DisplayName("400 — 제목이 비어있으면 거부한다")
         void rejectBlankTitle() throws Exception {
             var request = new ReminderRequest("", savedList.getId(), null, null, null, null);
@@ -124,6 +145,15 @@ class ReminderControllerTest {
             mockMvc.perform(post("/api/reminders")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("400 — 잘못된 JSON 형식이면 거부한다")
+        void rejectMalformedJson() throws Exception {
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{invalid json}"))
                     .andExpect(status().isBadRequest());
         }
 
@@ -156,13 +186,17 @@ class ReminderControllerTest {
         @DisplayName("200 — 리마인더를 수정한다")
         void updatesReminder() throws Exception {
             var saved = reminderRepository.save(new Reminder("Old", savedList));
-            var request = new ReminderRequest("New", savedList.getId(), null, null, null, null);
+            var request = new ReminderRequest("New", savedList.getId(),
+                    "메모", LocalDate.of(2026, 5, 1), LocalTime.of(14, 0), Priority.MEDIUM);
 
             mockMvc.perform(put("/api/reminders/{id}", saved.getId())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.title").value("New"));
+                    .andExpect(jsonPath("$.title").value("New"))
+                    .andExpect(jsonPath("$.memo").value("메모"))
+                    .andExpect(jsonPath("$.dueDate").value("2026-05-01"))
+                    .andExpect(jsonPath("$.priority").value("MEDIUM"));
         }
 
         @Test
@@ -182,13 +216,14 @@ class ReminderControllerTest {
     class Toggle {
 
         @Test
-        @DisplayName("200 — 완료 상태를 토글한다")
+        @DisplayName("200 — 완료 상태를 토글하고 completedAt이 설정된다")
         void togglesCompleted() throws Exception {
             var saved = reminderRepository.save(new Reminder("Task", savedList));
 
             mockMvc.perform(patch("/api/reminders/{id}/toggle", saved.getId()))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.completed").value(true));
+                    .andExpect(jsonPath("$.completed").value(true))
+                    .andExpect(jsonPath("$.completedAt").isNotEmpty());
         }
 
         @Test

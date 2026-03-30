@@ -167,6 +167,18 @@ class DefaultReminderServiceTest {
         }
 
         @Test
+        @DisplayName("다시 토글하면 completedAt이 null이 된다")
+        void toggleBackClearsCompletedAt() {
+            var saved = reminderRepository.save(new Reminder("Task", savedList));
+            service.toggle(saved.getId());
+
+            var result = service.toggle(saved.getId());
+
+            assertThat(result.completed()).isFalse();
+            assertThat(result.completedAt()).isNull();
+        }
+
+        @Test
         @DisplayName("존재하지 않는 리마인더 토글 시 예외를 던진다")
         void throwsWhenNotFound() {
             assertThatThrownBy(() -> service.toggle(999L))
