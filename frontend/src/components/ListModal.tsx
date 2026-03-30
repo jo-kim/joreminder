@@ -17,6 +17,7 @@ export default function ListModal({ list, onSave, onCancel }: ListModalProps) {
   const [name, setName] = useState(list?.name ?? "");
   const [color, setColor] = useState(list?.color ?? "BLUE");
   const inputRef = useRef<HTMLInputElement>(null);
+  const submittedRef = useRef(false);
 
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
@@ -32,8 +33,10 @@ export default function ListModal({ list, onSave, onCancel }: ListModalProps) {
   }, [handleEscape]);
 
   const handleSubmit = () => {
+    if (submittedRef.current) return;
     const trimmed = name.trim();
     if (trimmed) {
+      submittedRef.current = true;
       onSave(trimmed, color);
     }
   };

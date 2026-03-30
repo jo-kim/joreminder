@@ -43,6 +43,7 @@ export default function MainContent({
   const [newTitle, setNewTitle] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const submittedRef = useRef(false);
 
   useEffect(() => {
     if (adding && inputRef.current) {
@@ -69,10 +70,14 @@ export default function MainContent({
   const color = getColor(list.color);
 
   const handleCreate = () => {
+    if (submittedRef.current) return;
     const trimmed = newTitle.trim();
     if (trimmed) {
+      submittedRef.current = true;
       onCreate(trimmed);
       setNewTitle("");
+      setAdding(false);
+      setTimeout(() => { submittedRef.current = false; }, 100);
     } else {
       setAdding(false);
       setNewTitle("");
