@@ -1,5 +1,6 @@
 package jo.ai.joreminder.controller;
 
+import jakarta.validation.Valid;
 import jo.ai.joreminder.dto.ReminderRequest;
 import jo.ai.joreminder.dto.ReminderResponse;
 import jo.ai.joreminder.service.ports.in.ReminderService;
@@ -22,14 +23,14 @@ public class ReminderController {
     }
 
     @PostMapping("/api/reminders")
-    public ResponseEntity<ReminderResponse> create(@RequestBody ReminderRequest request) {
+    public ResponseEntity<ReminderResponse> create(@Valid @RequestBody ReminderRequest request) {
         var created = reminderService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/api/reminders/{id}")
     public ResponseEntity<ReminderResponse> update(@PathVariable Long id,
-                                                   @RequestBody ReminderRequest request) {
+                                                   @Valid @RequestBody ReminderRequest request) {
         return ResponseEntity.ok(reminderService.update(id, request));
     }
 

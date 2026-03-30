@@ -82,6 +82,17 @@ class ReminderListControllerTest {
                     .andExpect(jsonPath("$.color").value("GREEN"))
                     .andExpect(jsonPath("$.isDefault").value(false));
         }
+
+        @Test
+        @DisplayName("400 — 이름이 비어있으면 거부한다")
+        void rejectBlankName() throws Exception {
+            var request = new ReminderListRequest("", "RED");
+
+            mockMvc.perform(post("/api/lists")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest());
+        }
     }
 
     @Nested
@@ -128,12 +139,12 @@ class ReminderListControllerTest {
         }
 
         @Test
-        @DisplayName("400 — 기본 목록 삭제 시")
-        void returnsBadRequestForDefault() throws Exception {
+        @DisplayName("409 — 기본 목록 삭제 시")
+        void returnsConflictForDefault() throws Exception {
             var defaultList = repository.save(ReminderList.createDefault("미리 알림"));
 
             mockMvc.perform(delete("/api/lists/{id}", defaultList.getId()))
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isConflict());
         }
 
         @Test

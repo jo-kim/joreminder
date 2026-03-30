@@ -91,6 +91,26 @@ class ReminderControllerTest {
         }
 
         @Test
+        @DisplayName("400 — 제목이 비어있으면 거부한다")
+        void rejectBlankTitle() throws Exception {
+            var request = new ReminderRequest("", savedList.getId(), null, null, null, null);
+
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("400 — listId가 null이면 거부한다")
+        void rejectNullListId() throws Exception {
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"title\":\"Test\"}"))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
         @DisplayName("404 — 존재하지 않는 목록에 생성 시")
         void returnsNotFound() throws Exception {
             var request = new ReminderRequest("Task", 999L, null, null, null, null);
