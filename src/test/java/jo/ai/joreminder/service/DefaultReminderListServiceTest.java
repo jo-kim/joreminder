@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import jo.ai.joreminder.domain.Reminder;
+import jo.ai.joreminder.repository.ReminderRepository;
+
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,8 +30,12 @@ class DefaultReminderListServiceTest {
     @Autowired
     private ReminderListRepository repository;
 
+    @Autowired
+    private ReminderRepository reminderRepository;
+
     @BeforeEach
     void setUp() {
+        reminderRepository.deleteAll();
         repository.deleteAll();
     }
 
@@ -46,6 +53,22 @@ class DefaultReminderListServiceTest {
 
             assertThat(result).hasSize(2);
         }
+
+        @Test
+        @DisplayName("reminderCount에 미완료 리마인더 수가 포함된다")
+        void includesReminderCount() {
+            var list = repository.save(new ReminderList("Work", "RED"));
+            reminderRepository.save(new Reminder("Task 1", list));
+            reminderRepository.save(new Reminder("Task 2", list));
+            var done = reminderRepository.save(new Reminder("Task 3", list));
+            done.toggleCompleted();
+            reminderRepository.save(done);
+
+            var result = service.findAll();
+
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).reminderCount()).isEqualTo(2);
+        }
     }
 
     @Nested
@@ -61,6 +84,18 @@ class DefaultReminderListServiceTest {
 
             assertThat(result.name()).isEqualTo("Work");
             assertThat(result.color()).isEqualTo("RED");
+        }
+
+        @Test
+        @DisplayName("reminderCount에 미완료 리마인더 수가 포함된다")
+        void includesReminderCount() {
+            var list = repository.save(new ReminderList("Work", "RED"));
+            reminderRepository.save(new Reminder("Task 1", list));
+            reminderRepository.save(new Reminder("Task 2", list));
+
+            var result = service.findById(list.getId());
+
+            assertThat(result.reminderCount()).isEqualTo(2);
         }
 
         @Test

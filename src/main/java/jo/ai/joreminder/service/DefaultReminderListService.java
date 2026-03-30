@@ -23,17 +23,22 @@ public class DefaultReminderListService implements ReminderListService {
 
     @Override
     public List<ReminderListResponse> findAll() {
+        var countMap = reminderRepository.countByListGrouped().stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        row -> (Long) row[0],
+                        row -> ((Number) row[1]).intValue()));
         return reminderListRepository.findAll().stream()
                 .map(list -> ReminderListResponse.from(
                         list,
-                        reminderRepository.countByListIdAndCompletedFalse(list.getId())))
+                        countMap.getOrDefault(list.getId(), 0)))
                 .toList();
     }
 
     @Override
     public ReminderListResponse findById(Long id) {
         var list = getById(id);
-        return ReminderListResponse.from(list);
+        var count = reminderRepository.countByListIdAndCompletedFalse(id);
+        return ReminderListResponse.from(list, count);
     }
 
     @Override
